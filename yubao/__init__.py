@@ -22,6 +22,27 @@ class YubaoTelBot(Bot):
             "copyMessage", chat_id=chat_id, from_chat_id=from_chat_id, message_id=message_id, **options
         )
 
+class extendChat(Chat):
+    def reply(self, text, markup=None, parse_mode=None, **options):
+        """
+        Reply to the message this `Chat` object is based on.
+
+        :param str text: Text of the message to send
+        :param dict markup: Markup options
+        :param str parse_mode: Text parsing mode (``"Markdown"``, ``"HTML"`` or
+            ``None``)
+        """
+        if markup is None:
+            markup = {}
+
+        return self.send_text(
+            text,
+            reply_to_message_id=self.message["message_id"],
+            disable_web_page_preview="true",
+            reply_markup=self.bot.json_serialize(markup),
+            parse_mode=parse_mode,
+            **options
+        )
 
 def init(token, proxy=None, **kwargs):
     global _bot
