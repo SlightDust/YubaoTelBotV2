@@ -6,6 +6,9 @@ import os
 import math
 import base64
 import uuid
+import time
+import random
+import json
 from os.path import dirname, join, exists
 
 import ahocorasick
@@ -231,3 +234,27 @@ async def get_imgdata_sd(tagdict:dict,way=1,shape="Portrait",b_io=None,size = No
         return result_msg,error_msg
     result_msg = f"{temp_image_path}/{pid}.png"
     return result_msg,error_msg
+
+
+tags_id = ["优秀实践","风格","头发","发色","衣服","鞋子","装饰","胸","类型","身份","表情","二次元","基础动作","手动作","腿动作","复合动作","露出","场景","物品","天气","环境"]
+tags = "{{highly detailed}},{{masterpiece}},{ultra-detailed},{illustration},{{1girl}},{{best quality}}" #正面默认tags
+ntags = "lowres, badanatomy, extradigit, fewerdigit,(worst quality, low quality:1.4) ,lowres,bad anatomy,bad hands, error, missing fingers,extra digit, fewer digits, cropped, worstquality, low quality, normal quality,jpegartifacts,signature, watermark, username,blurry,bad feet,cropped,poorly drawn hands,poorly drawn face,mutation,deformed,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,extra fingers,fewer digits,extra limbs,extra arms,extra legs,malformed limbs,fused fingers,too many fingers,long neck,mutated hands,polar lowres,bad body,bad proportions,gross proportions,text,error,missing fingers,missing arms,missing legs,extra digit, ((Intricate clothes, too much lace, too much dacoration on clothes))" #默认的负面tags
+tag_path = join(curpath,"./resources/magicbooks/tag_data.json")
+with open((tag_path),encoding="utf-8") as f: #初始化tags
+    tag_data = json.load(f)
+
+
+async def be_girl(uid):
+    tags = ""
+    goal_tag = {}
+    uid = int(uid)
+    random.seed(uid * (int(time.time()/3600/24)))
+    for i in tags_id:
+        tag_list = []
+        for j in tag_data[i]:
+            tag_list.append(j)
+        goal_tag[i] = random.choice(tag_list)
+    for i in goal_tag:
+        tags += "," + tag_data[i][goal_tag[i]]
+    msg = f'头发是{goal_tag["发色"]}{goal_tag["头发"]},胸部{goal_tag["胸"]},穿着{goal_tag["衣服"]},{goal_tag["鞋子"]},{goal_tag["装饰"]},萌点是{goal_tag["二次元"]},身份是{goal_tag["身份"]}{goal_tag["类型"]}'
+    return msg,tags

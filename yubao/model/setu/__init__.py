@@ -15,7 +15,7 @@ from aiotg.bot import BotApiError
 import yubao
 import yubao.util.aiorequest
 from yubao.util.logger import new_logger
-logger = new_logger("echo_yubao")
+logger = new_logger("setu")
 bot = yubao.get_bot()
 from yubao.config import Config
 config = Config().read_config()
