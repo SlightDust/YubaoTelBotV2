@@ -24,6 +24,10 @@ logger = new_logger("setu")
 
 @bot.command(r'^[色涩瑟][图圖]|不够[色涩瑟]|[来來发發给給]((?P<num>\d+)|(?:.*))[张張个個幅点點份丶](?P<keyword>.*?)[色涩瑟][图圖]$')
 async def setu(chat:Chat, match):
+    logger.info(f'收到来自{chat.sender} from {chat.type} chat {chat.id} 的 setu 消息: {chat.message}')
+    if 'private' in chat.type:
+        chat.reply("请在群聊中使用该功能~")
+        return
     sent_msg = await chat.reply(text="正在搜索，请稍候……")
     to_del_mid = sent_msg.get("result").get("message_id")
     num = match.group("num")
@@ -32,7 +36,6 @@ async def setu(chat:Chat, match):
     if keyword == "域宝":
         await chat.reply(text="域宝没有色图哦")
         return 
-    logger.info(f'收到来自{chat.sender} from {chat.type} chat {chat.id} 的 setu 消息: {chat.message}')
     images = await get_random_lolicon_setu_online(r18=2,keyword=keyword,num=num)
     await chat.delete_message(message_id=to_del_mid)
     if len(images)==0:

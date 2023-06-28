@@ -23,6 +23,9 @@ async def text2img_sd(chat:Chat, match):
     # if not flmt.check(uid):
     #     await bot.send(ev, f'您冲的太快了,{round(flmt.left_time(uid))}秒后再来吧~', at_sender=True)
     #     return 
+    if 'private' in chat.type:
+        chat.reply("请在群聊中使用该功能~")
+        return
     mid = chat.message.get('message_id')
     sent_msg = await chat.send_text(text="少女绘图中……")  # 反馈互动
     to_del_mid = sent_msg.get("result").get("message_id")
@@ -56,6 +59,9 @@ async def be_syoujo(chat:Chat, match):
     uid = chat.message.get("from").get('id')
     mid = chat.message.get('message_id')
     logger.info(f'收到来自{chat.sender} from {chat.type} chat {chat.id} 的 be_syoujo 消息: {chat.message}')
+    if 'private' in chat.type:
+        chat.reply("请在群聊中使用该功能~")
+        return
     sent_msg = await chat.reply("收到指令,AI创作中~") #反馈互动
     to_del_mid = sent_msg.get("result").get("message_id")
     name = chat.sender
