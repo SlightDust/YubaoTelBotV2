@@ -22,6 +22,7 @@ from yubao.model import echo_yubao
 from yubao.model import command
 from yubao.model import setu
 from yubao.model import ai_setu
+# from yubao.model import fortune_yubao
 
 @bot.default
 def unknow(chat:Chat, message):
