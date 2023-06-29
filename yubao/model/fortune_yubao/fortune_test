@@ -1,0 +1,60 @@
+import random
+import sys, os, io
+import json
+
+from io import BytesIO
+
+sys.path.append(os.getcwd())
+
+from PIL import Image, ImageDraw, ImageFont
+
+font_path = os.path.join(os.path.dirname(__file__), 'sakura.ttf')
+img = Image.open(os.path.join(os.path.dirname(__file__), 'fortune_small.png'))
+qianPool_path = os.path.join(os.path.dirname(__file__), 'qianPool.json')
+
+def draw_one(chuyi = 0):
+    with open(qianPool_path, 'r', encoding='utf-8') as jsonfile:
+        qian_pool = json.load(jsonfile)
+    qian = random.choice(qian_pool)
+
+    new_img = img.copy()
+    draw = ImageDraw.Draw(new_img)
+    # if chuyi == 0:
+    #     text = random.choice(["大吉", "中吉", "小吉", "吉", "末吉", "凶", "大凶"])
+    # else:
+    #     text = random.choice(["大吉", "中吉", "小吉", "吉", "末吉"])  # 初詣只有吉签
+    text = qian.get('签位')
+    # 13: 50
+    # 4: 120
+    # y = -70/9 * x + 1360/9
+
+    font_size = int(-80/9 * len(qian.get('签位')) + 1360/9)
+    color = '#101010'
+    image_font_center = (345, 170)
+    ttfront = ImageFont.truetype(font_path, font_size)
+    font_length = ttfront.getbbox(text)[2:4]
+    draw.text((image_font_center[0] - font_length[0] / 2, image_font_center[1] - font_length[1] / 2),
+              text, fill=color, font=ttfront)
+    b_handle = io.BytesIO()
+    new_img.save(b_handle, format="PNG")
+    b_handle.seek(0)
+    b_handle.name = "temp.jpeg"
+    b_br = io.BufferedReader(b_handle)
+    return [new_img, text, qian.get('签文'), qian.get('解签')]
+
+
+draw_result = draw_one(chuyi = 0)
+image = draw_result[0]
+qianwei = draw_result[1]
+qianwen = draw_result[2]
+jieqian = draw_result[3]
+# image.show()
+print(qianwei, qianwen, jieqian)
+
+# bytesio = BytesIO((image.tobytes()))
+
+# bytesio.name = "temp.jpeg"
+# buffreader = io.BufferedReader(bytesio)
+
+
+print(type(open(os.path.join(os.path.dirname(__file__), 'fortune_small.png'),'rb')))
