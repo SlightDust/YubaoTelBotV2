@@ -37,34 +37,18 @@ async def help(chat:Chat, match):
         help_txt = f.read()
     await bot.send_message(chat_id=chat.id, text=help_txt)
 
+
+@bot.command(r"^/star(@YubaoTelBot)?$")
+async def star(chat:Chat, match):
+    logger = new_logger("star")
+    logger.info(f'收到来自{chat.sender} from {chat.type} chat {chat.id} 的 /star 命令')
+    bot_repo = "https://github.com/SlightDust/yubaoTelBotV2"
+    txt = f"yubaoTelBotV2代码全部开源，欢迎帮我点个star，并与我共同开发。\n{bot_repo}"
+    await chat.send_text(txt)
+
 @bot.command("atme")
 async def at_test(chat:Chat, match):
     logger = new_logger("atme")
     logger.info(f'收到来自{chat.sender} from {chat.type} chat {chat.id} 的 atme 命令: {chat.message}')
     text, at = await at_sender(chat)
     await chat.send_text(text=text, entities=at)
-    return 
-    cid = chat.id
-    uid = chat.message.get("from").get('id')
-    uname = chat.message.get('from').get('username')
-    ufstname = chat.message.get('from').get('first_name')
-    # print(uid, uname, ufstname)
-    if uname is not None:
-        # 发送者设置了username，优先以@username的形式创建mention
-        at = f"[{{'offset': 0, 'length': {1+len(uname)}, 'type':'mention', }}]"
-        await chat.send_text(text=f'@{uname}')
-    else:
-        # 发送者未设置username，创建text_mention
-        at = [
-            {'offset': 0, 
-             'length': len(ufstname), 
-             'type': 'text_mention', 
-             'user':{'id': uid, 
-                     'is_bot': False, 
-                     'first_name': ufstname
-                     }
-            }]
-        await chat.send_text(text=f'{ufstname}', entities=json.dumps(at, ensure_ascii=False))
-
-
-    # at = f"[\{'offset': 0, 'length': {}, 'type':'text_mention', \}]"
