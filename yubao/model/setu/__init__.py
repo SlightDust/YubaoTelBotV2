@@ -34,6 +34,9 @@ async def setu(chat:extendChat, match):
     to_del_mid = sent_msg.get("result").get("message_id")
     num = match.group("num")
     num = 1 if num is None else num
+    if num > 5:
+        chat.reply(text="太贪心辣，一次最多只能点5张涩图！")
+        num = 5
     keyword = match.group("keyword")
     if keyword == "域宝":
         await chat.reply(text="域宝没有色图哦")
