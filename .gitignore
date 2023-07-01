@@ -9,6 +9,9 @@ logs
 
 # 生成文件
 TempImage
+db/example.db
+db/login_bonus.db
+db/main.db
 
 # 测试用文件
 yubao/model/fortune_yubao/Mamelon.otf
