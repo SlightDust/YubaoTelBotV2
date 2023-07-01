@@ -17,7 +17,6 @@ import yubao.util.aiorequest
 from yubao import extendChat
 from yubao.util.make_at import at_sender, at_callbacker
 from yubao.util.logger import new_logger
-logger = new_logger("setu")
 bot = yubao.get_bot()
 from yubao.config import Config
 config = Config().read_config()

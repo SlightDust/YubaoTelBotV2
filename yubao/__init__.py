@@ -1,7 +1,11 @@
 import json
 from aiotg import Bot, Chat
+import io
 
 from yubao.util.logger import new_logger
+from yubao.config import Config
+config = Config().read_config()
+import yubao.util.aiorequest
 logger = new_logger("yubao")
 
 _bot = None
@@ -21,28 +25,39 @@ class YubaoTelBot(Bot):
         return self.api_call(
             "copyMessage", chat_id=chat_id, from_chat_id=from_chat_id, message_id=message_id, **options
         )
+    async def get_user_head(self,uid):
+        photos = await _bot.get_user_profile_photos(user_id=uid)
+        # print(photos)
+        try:
+            photo_file_id = photos.get('result').get('photos')[0][0].get('file_id')
+            photo = await _bot.get_file(file_id=photo_file_id)
+            url = f"https://api.telegram.org/file/bot{config['token']}/{photo.get('file_path')}"
+            # print(url)
+            photo_file_coroutine = await yubao.util.aiorequest.get(url)
+            photo_file = await photo_file_coroutine.content
+            b_handle = io.BytesIO()
+            b_handle.write(photo_file)
+            b_handle.seek(0)
+            b_handle.name = "temp.jpeg"
+            b_br = io.BufferedReader(b_handle)
+            return (b_br)
+        except:
+            return None
 
 class extendChat(Chat):
-    def reply(self, text, markup=None, parse_mode=None, **options):
-        """
-        Reply to the message this `Chat` object is based on.
+    def __init__(self, bot, chat_id, chat_type="private", src_message=None):
+        super(extendChat, self).__init__()
+        super().__init__(bot, chat_id, chat_type, src_message)
 
-        :param str text: Text of the message to send
-        :param dict markup: Markup options
-        :param str parse_mode: Text parsing mode (``"Markdown"``, ``"HTML"`` or
-            ``None``)
-        """
-        if markup is None:
-            markup = {}
-
-        return self.send_text(
-            text,
-            reply_to_message_id=self.message["message_id"],
-            disable_web_page_preview="true",
-            reply_markup=self.bot.json_serialize(markup),
-            parse_mode=parse_mode,
-            **options
-        )
+    def get_uid(self):
+        return str(self.message.get("from").get('id'))
+    
+    def get_username(self):
+        return str(self.message.get("from").get('username'))
+    
+    def get_first_name(self):
+        return self.message.get("from").get('first_name')
+    
 
 def init(token, proxy=None, **kwargs):
     global _bot
