@@ -134,10 +134,9 @@ async def login_bonus(chat:Chat, match):
     signed, data = await already_signed(chat=chat)
     # id, first_name, user_id, username, chat_id, chat_tiale, chat_type, date
     old_total, old_cons, last_date = await init_user(chat)  # 在签到统计表中初始化
-    signed = False
     if signed:
         # 已经签到过了
-        chat.reply("你已经签到过了，请明天再来")
+        chat.reply("主人您已经签到过了，请明天再来~")
         pass
     else:
         # 今天还没签过
@@ -161,8 +160,9 @@ async def login_bonus(chat:Chat, match):
         todo = random.choice(todo_list)
         last_date = "0" if str(last_date)=="1970-01-01" else last_date
         image = await draw_pic_login(chat.get_uid(), add, score, total_days, cons, last_date, todo, chat)
-        image.show()
-        # photo = await Image2BufferedReader(image)
+        # image.show()
+        photo = await Image2BufferedReader(image)
+        await chat.reply_photo(photo=photo)
         pass
 
 async def init_user(chat:Chat):
