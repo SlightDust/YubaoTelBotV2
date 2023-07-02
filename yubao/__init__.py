@@ -48,6 +48,7 @@ class extendChat(Chat):
     def __init__(self, bot, chat_id, chat_type="private", src_message=None):
         super(extendChat, self).__init__()
         super().__init__(bot, chat_id, chat_type, src_message)
+        self.bot.__class__ = YubaoTelBot
 
     def get_uid(self):
         return str(self.message.get("from").get('id'))
@@ -57,6 +58,9 @@ class extendChat(Chat):
     
     def get_first_name(self):
         return self.message.get("from").get('first_name')
+    
+    def reply_photo(self, photo, caption="", **options):
+        return self.bot.send_photo(chat_id=self.id, photo=photo, caption=caption, reply_to_message_id=self.message.get('message_id'), **options)
     
 
 def init(token, proxy=None, **kwargs):
