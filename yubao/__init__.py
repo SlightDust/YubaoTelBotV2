@@ -26,6 +26,7 @@ class YubaoTelBot(Bot):
             "copyMessage", chat_id=chat_id, from_chat_id=from_chat_id, message_id=message_id, **options
         )
     async def get_user_head(self,uid):
+        proxy = {'https':config['proxy']}
         photos = await _bot.get_user_profile_photos(user_id=uid)
         # print(photos)
         try:
@@ -33,7 +34,7 @@ class YubaoTelBot(Bot):
             photo = await _bot.get_file(file_id=photo_file_id)
             url = f"https://api.telegram.org/file/bot{config['token']}/{photo.get('file_path')}"
             # print(url)
-            photo_file_coroutine = await yubao.util.aiorequest.get(url)
+            photo_file_coroutine = await yubao.util.aiorequest.get(url,proxies=proxy)
             photo_file = await photo_file_coroutine.content
             b_handle = io.BytesIO()
             b_handle.write(photo_file)
