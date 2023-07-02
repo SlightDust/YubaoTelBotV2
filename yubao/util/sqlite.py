@@ -1,4 +1,6 @@
 import sqlite3
+import os
+os.makedirs('./db', exist_ok=True)
 
 class Sqlite:
     def __init__(self, db_file):
