@@ -112,7 +112,7 @@ def get_score_rank(total):
 
 async def get_date_logined(uid: str, year, month) -> list:
     res = []
-    sql = f"SELECT `date` FROM `login_detail` WHERE `user_id`='{uid}' AND `date`='{datetime.date.today}'"
+    sql = f"SELECT `date` FROM `login_detail` WHERE `user_id`='{uid}' AND strftime('%Y',DATE)=='{year}' AND strftime('%m',DATE)=='{month:02}'"
     with Sqlite(dbfile) as sqliter:
         cursor = await sqliter.execute_sql(sql)
         data = cursor.fetchmany(31)
@@ -136,6 +136,7 @@ async def login_bonus(chat:Chat, match):
     old_total, old_cons, last_date = await init_user(chat)  # 在签到统计表中初始化
     if signed:
         # 已经签到过了
+        # 这里给个完善，加一张签到图？
         chat.reply("主人您已经签到过了，请明天再来~")
         pass
     else:
