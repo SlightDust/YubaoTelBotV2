@@ -19,6 +19,9 @@ async def _5kcy(chat:Chat, match):
     chat.__class__ = extendChat
     logger = new_logger("5kcy")
     logger.info(f'收到来自{chat.sender} from {chat.type} chat {chat.id} 的 5kcy 消息: {chat.message}')
+    if 'private' in chat.type:
+        chat.reply("请在群聊中使用该功能~")
+        return
     line1 = match.group("line1")
     line2 = match.group("line2")
     try:
