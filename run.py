@@ -25,6 +25,7 @@ from yubao.model import ai_setu
 from yubao.model import fortune_yubao
 from yubao.model import login_bonus
 from yubao.model import _5kcy
+from yubao.model import pixiv
 
 @bot.default
 def unknow(chat:Chat, message):
