@@ -24,7 +24,7 @@ bot = yubao.get_bot()
 model_name = "pixiv搜索"  # 在此处定义插件名称
 
 delete_delay = 30
-helptext = f"pixiv搜索 关键词 -参数\n参数包括：\n-r18 仅搜索r-18涩图\n-safe：仅搜索非r-18涩图\n-any：不过滤r18（默认）\n-popular：按热度搜索\n-any：搜索最新结果（默认）\n{delete_delay}秒后自动撤回该帮助"
+helptext = f"pixiv搜索 关键词 -参数\n参数包括：\n-r18 仅搜索r-18涩图\n-safe：仅搜索非r-18涩图\n-any：不过滤r18（默认）\n-popular：按热度搜索\n-any：搜索最新结果（默认）"
 
 @bot.command(r"^帮助pixiv搜索$")
 async def help_pixiv(chat:Chat, match):  # 需要修改为插件名
@@ -88,7 +88,7 @@ async def pixiv(chat:Chat, match):  # 需要修改为插件名
 
 @bot.callback(r'button_help_pixiv')
 async def button_help_pixiv(chat, cq, match):
-    sent_msg = await bot.send_message(chat_id=cq.src.get('message').get('chat').get('id'), text=helptext)
+    sent_msg = await bot.send_message(chat_id=cq.src.get('message').get('chat').get('id'), text=helptext+f"\n{delete_delay}秒后自动撤回该帮助")
     to_del_mid = sent_msg.get("result").get("message_id")
     await asyncio.sleep(delete_delay)
     await chat.delete_message(message_id=to_del_mid)  # 撤回反馈互动,防止刷屏
