@@ -26,10 +26,11 @@ from yubao.model import fortune_yubao
 from yubao.model import login_bonus
 from yubao.model import _5kcy
 from yubao.model import pixiv
+from yubao.model import rss
 
 @bot.default
 def unknow(chat:Chat, message):
-    logger = new_logger("unknow")
+    logger = new_logger("unknown")
     logger.info(f'收到来自{chat.sender} from {chat.type} chat {chat.id} 的 undefined 消息: {chat.message}')
 
 
